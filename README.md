@@ -2,6 +2,8 @@
 
 Jogo da "cobrinha" feito para a live com a Rocketseat
 
+[DEMO](https://andre-noel.github.io/snake-game/)
+
 ![Print do jogo](./images/print.png)
 
 Veja a live: https://www.youtube.com/watch?v=4xPW0n-7okE
