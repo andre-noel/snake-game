@@ -7,7 +7,7 @@ body {
   background-color: #282c34;
 }
 
-#tabuleiro {
+#board {
   display: grid;
   grid-template-columns: repeat(20, 40px);
   grid-template-rows: repeat(20, 40px);
@@ -15,7 +15,7 @@ body {
   background-color: lightgray;
 }
 
-.casa {
+.cell {
   width: 40px;
   height: 40px;
   background-color: white;
@@ -23,9 +23,6 @@ body {
 
 .snake {
   background: white url(images/cabeca.png) no-repeat center center;
-}
-.up {
-  transform: rotate("90deg");
 }
 
 .coffee,

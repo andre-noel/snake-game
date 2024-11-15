@@ -1,104 +1,104 @@
-const direita = { x: 1, y: 0 };
-const esquerda = { x: -1, y: 0 };
-const cima = { x: 0, y: -1 };
-const baixo = { x: 0, y: 1 };
+const DIREITA = { x: 1, y: 0 };
+const ESQUERDA = { x: -1, y: 0 };
+const CIMA = { x: 0, y: -1 };
+const BAIXO = { x: 0, y: 1 };
 
-const tamanho = 20;
+const boardSize = 20;
 
-const estadoInicial = {
-  cobra: [{ x: 0, y: 0 }],
-  cafe: generateCoffee(),
-  direcao: direita,
+const initialState = {
+  snake: [{ x: 0, y: 0 }],
+  coffee: generateCoffee(),
+  direction: DIREITA,
   gameOver: false,
 };
 
-const tabuleiro = document.getElementById("tabuleiro");
+const board = document.getElementById("board");
 
-for (let index = 0; index < tamanho * tamanho; index += 1) {
-  const casa = document.createElement("div");
-  casa.classList.add("casa");
-  tabuleiro.appendChild(casa);
+for (let index = 0; index < boardSize * boardSize; index += 1) {
+  const cell = document.createElement("div");
+  cell.classList.add("cell");
+  board.appendChild(cell);
 }
 
-const desenhaTabuleiro = (estado) => {
-  const casas = document.querySelectorAll(".casa");
-  casas.forEach((casa) => (casa.className = "casa"));
-  const [cabeca, ...cauda] = estado.cobra;
-  const index = cabeca.y * tamanho + cabeca.x;
-  casas[index].classList.add("snake");
+const desenhaTabuleiro = (state) => {
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach((cell) => (cell.className = "cell"));
+  const [cabeca, ...cauda] = state.snake;
+  const index = cabeca.y * boardSize + cabeca.x;
+  cells[index].classList.add("snake");
   cauda.forEach((pedaco) => {
-    const index = pedaco.y * tamanho + pedaco.x;
-    casas[index].classList.add("cauda");
+    const index = pedaco.y * boardSize + pedaco.x;
+    cells[index].classList.add("cauda");
   });
 
-  const coffeeIndex = estado.cafe.y * tamanho + estado.cafe.x;
-  casas[coffeeIndex].classList.add("coffee");
+  const coffeeIndex = state.coffee.y * boardSize + state.coffee.x;
+  cells[coffeeIndex].classList.add("coffee");
 };
 
-const moveCobra = (cobra, direcao) => {
-  const novaCabeca = {
-    x: cobra[0].x + direcao.x,
-    y: cobra[0].y + direcao.y,
+const moveSnake = (snake, direction) => {
+  const newHead = {
+    x: snake[0].x + direction.x,
+    y: snake[0].y + direction.y,
   };
 
-  novaCabeca.x = (novaCabeca.x + tamanho) % tamanho;
-  novaCabeca.y = (novaCabeca.y + tamanho) % tamanho;
+  newHead.x = (newHead.x + boardSize) % boardSize;
+  newHead.y = (newHead.y + boardSize) % boardSize;
 
-  return [novaCabeca, ...cobra.slice(0, -1)];
+  return [newHead, ...snake.slice(0, -1)];
 };
 
-const verificaColisao = (cobra) => {
-  const [head, ...body] = cobra;
-  return body.some((pedaco) => pedaco.x === head.x && pedaco.y === head.y);
+const checkCollision = (snake) => {
+  const [head, ...body] = snake;
+  return body.some((segment) => segment.x === head.x && segment.y === head.y);
 };
 
 function generateCoffee() {
   return {
-    x: Math.floor(Math.random() * tamanho),
-    y: Math.floor(Math.random() * tamanho),
+    x: Math.floor(Math.random() * boardSize),
+    y: Math.floor(Math.random() * boardSize),
   };
 }
 
-const gameLoop = (estado) => {
-  if (estado.gameOver) {
+const gameLoop = (state) => {
+  if (state.gameOver) {
     alert("Game over!");
     return;
   }
 
-  const novaCobra = moveCobra(estado.cobra, estadoInicial.direcao);
-  if (verificaColisao(novaCobra)) {
-    estado.gameOver = true;
+  const newSnake = moveSnake(state.snake, initialState.direction);
+  if (checkCollision(newSnake)) {
+    state.gameOver = true;
   }
 
-  let novoCafe = estado.cafe;
-  if (novaCobra[0].x === estado.cafe.x && novaCobra[0].y === estado.cafe.y) {
-    novaCobra.push({ ...novaCobra[novaCobra.length - 1] });
-    novoCafe = generateCoffee();
+  let novoCoffee = state.coffee;
+  if (newSnake[0].x === state.coffee.x && newSnake[0].y === state.coffee.y) {
+    newSnake.push({ ...newSnake[newSnake.length - 1] });
+    novoCoffee = generateCoffee();
   }
 
-  const novoEstado = {
-    ...estado,
-    cobra: novaCobra,
-    cafe: novoCafe,
+  const newState = {
+    ...state,
+    snake: newSnake,
+    coffee: novoCoffee,
   };
 
-  desenhaTabuleiro(novoEstado);
-  setTimeout(() => gameLoop(novoEstado), 200);
+  desenhaTabuleiro(newState);
+  setTimeout(() => gameLoop(newState), 200);
 };
 
 const handleKeyPress = (event) => {
   const keyMap = {
-    ArrowRight: { x: 1, y: 0 },
-    ArrowLeft: { x: -1, y: 0 },
-    ArrowUp: { x: 0, y: -1 },
-    ArrowDown: { x: 0, y: 1 },
+    ArrowRight: DIREITA,
+    ArrowLeft: ESQUERDA,
+    ArrowUp: CIMA,
+    ArrowDown: BAIXO,
   };
 
   if (keyMap[event.key]) {
-    estadoInicial.direcao = keyMap[event.key];
+    initialState.direction = keyMap[event.key];
   }
 };
 
 document.addEventListener("keydown", handleKeyPress);
-desenhaTabuleiro(estadoInicial);
-gameLoop(estadoInicial);
+desenhaTabuleiro(initialState);
+gameLoop(initialState);
