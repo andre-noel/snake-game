@@ -7,7 +7,7 @@ body {
   background-color: #282c34;
 }
 
-#tabuleiro {
+#board {
   display: grid;
   grid-template-columns: repeat(20, 20px);
   grid-template-rows: repeat(20, 20px);
@@ -15,7 +15,7 @@ body {
   background-color: #333;
 }
 
-.casa {
+.cell {
   width: 20px;
   height: 20px;
   background-color: rgb(137, 255, 90);
