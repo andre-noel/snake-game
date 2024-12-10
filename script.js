@@ -10,10 +10,11 @@ const initialState = {
   coffee: generateCoffee(),
   direction: DIREITA,
   gameOver: false,
+  points: 0,
 };
 
+// Cria tabuleiro
 const board = document.getElementById("board");
-
 for (let index = 0; index < boardSize * boardSize; index += 1) {
   const cell = document.createElement("div");
   cell.classList.add("cell");
@@ -33,6 +34,9 @@ const desenhaTabuleiro = (state) => {
 
   const coffeeIndex = state.coffee.y * boardSize + state.coffee.x;
   cells[coffeeIndex].classList.add("coffee");
+
+  const score = document.getElementById("score");
+  score.innerText = state.points;
 };
 
 const moveSnake = (snake, direction) => {
@@ -47,11 +51,13 @@ const moveSnake = (snake, direction) => {
   return [newHead, ...snake.slice(0, -1)];
 };
 
+// Se a cabeça da cobra colidir com o corpo, retorna true
 const checkCollision = (snake) => {
   const [head, ...body] = snake;
   return body.some((segment) => segment.x === head.x && segment.y === head.y);
 };
 
+// Apenas gera um objeto com coordenadas aleatórias
 function generateCoffee() {
   return {
     x: Math.floor(Math.random() * boardSize),
@@ -61,7 +67,7 @@ function generateCoffee() {
 
 const gameLoop = (state) => {
   if (state.gameOver) {
-    alert("Game over!");
+    document.getElementById("messages").innerText = "Game over!";
     return;
   }
 
@@ -71,15 +77,18 @@ const gameLoop = (state) => {
   }
 
   let novoCoffee = state.coffee;
+  let novaPontuacao = state.points;
   if (newSnake[0].x === state.coffee.x && newSnake[0].y === state.coffee.y) {
     newSnake.push({ ...newSnake[newSnake.length - 1] });
     novoCoffee = generateCoffee();
+    novaPontuacao += 1;
   }
 
   const newState = {
     ...state,
     snake: newSnake,
     coffee: novoCoffee,
+    points: novaPontuacao,
   };
 
   desenhaTabuleiro(newState);

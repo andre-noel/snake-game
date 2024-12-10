@@ -1,10 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 100vh;
   margin: 0;
   background-color: #282c34;
+  flex-grow: 0;
 }
 
 #board {
@@ -21,11 +26,26 @@ body {
   background-color: white;
 }
 
+.coffee,
+.cauda {
+  background: white url(images/coffee.png) no-repeat center center;
+}
 .snake {
   background: white url(images/cabeca.png) no-repeat center center;
 }
 
-.coffee,
-.cauda {
-  background: white url(images/coffee.png) no-repeat center center;
+#score,
+#messages {
+  color: #0f0;
+  font-size: 7em;
+  margin-left: 50px;
+  font-family: "Doto", sans-serif;
+}
+
+.panel {
+  min-height: 300px;
+  flex-basis: calc(100vw - 800px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
